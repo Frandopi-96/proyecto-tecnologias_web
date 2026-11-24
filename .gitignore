@@ -1,0 +1,17 @@
+# Sistema y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Datos generados al usar el portal (subid solo los *_ejemplo.json)
+src/recursos/*.json
+!src/recursos/*_ejemplo.json
+
+# Subidas de usuarios
+src/media/subidas/
+
+# Borradores de la memoria
+docs/memoria/*.docx
+~$*
