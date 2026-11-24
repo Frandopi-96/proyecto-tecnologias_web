@@ -1,0 +1,410 @@
+/*
+ * Hoja de estilo común del portal (como estilo.css de B2 Pas_5).
+ * Estilo "Teatro": cartel clásico de teatro y ópera. Fondo crema, granate y dorado.
+ *
+ * - Dos fuentes de Google Fonts: Playfair Display (títulos) y Source Sans 3 (texto).
+ *   Se cargan con @import aquí mismo, así no hace falta tocar partials/header.php.
+ * - Paleta en variables (:root). Usad siempre var(--color-...) en vuestras hojas
+ *   para que todo el portal tenga los mismos colores.
+ * - Esqueleto de portal.php: header, nav, avisos (.error / .exito), main, aside, footer.
+ *   Con pantalla ancha, main y aside.noticias van en dos columnas; en el móvil, en una.
+ *
+ * Accesibilidad: contraste AA en todos los textos y foco del teclado visible.
+ *
+ * @author Iker (persona C)
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Source+Sans+3:wght@400;600&display=swap");
+
+/* ---------- Paleta y fuentes ---------- */
+:root {
+    --color-fondo: #f8f3ea;          /* crema */
+    --color-superficie: #fffdf8;     /* tarjetas, formularios, aside */
+    --color-texto: #2b1d1a;
+    --color-texto-suave: #6b5a55;
+    --color-primario: #7a1f2b;       /* granate */
+    --color-primario-oscuro: #5a1520;
+    --color-acento: #b8862b;         /* dorado: solo líneas y adornos */
+    --color-acento-texto: #8a6114;   /* dorado oscuro: texto sobre fondo claro */
+    --color-acento-claro: #d9a845;   /* dorado claro: texto sobre granate u oscuro */
+    --color-borde: #d9cbb8;
+    --color-error: #b00020;
+    --color-error-fondo: #fbe9eb;
+    --color-exito: #2e6b3a;
+    --color-exito-fondo: #e7f2e9;
+
+    --fuente-titulos: "Playfair Display", Georgia, serif;
+    --fuente-texto: "Source Sans 3", Arial, sans-serif;
+    --radio: 4px;
+}
+
+/* ---------- Base ---------- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--fuente-texto);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    /* Dos columnas: contenido y aside. Si la página no tiene aside, la columna "auto" mide 0 */
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+}
+
+/* Lo que ocupa todo el ancho */
+header,
+nav,
+.error,
+.exito,
+footer {
+    grid-column: 1 / -1;
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--fuente-titulos);
+    line-height: 1.2;
+}
+
+h2 {
+    color: var(--color-primario);
+    font-size: 1.8rem;
+    border-bottom: 2px solid var(--color-acento);
+    padding-bottom: 0.3rem;
+}
+
+a {
+    color: var(--color-primario);
+}
+
+/* Foco visible al navegar con el teclado */
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+    outline: 3px solid var(--color-acento);
+    outline-offset: 2px;
+}
+
+/* ---------- Cabecera ---------- */
+header {
+    background: var(--color-primario);
+    color: var(--color-fondo);
+    text-align: center;
+    padding: 2rem 1rem 1.5rem;
+    border-bottom: 6px double var(--color-acento);
+}
+
+header a {
+    color: inherit;
+    text-decoration: none;
+}
+
+header h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+header p {
+    margin: 0.4rem 0 0;
+    font-style: italic;
+}
+
+/* ---------- Menú (partials/menu.php) ---------- */
+nav {
+    background: var(--color-primario-oscuro);
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+nav a {
+    display: block;
+    padding: 0.7rem 1rem;
+    color: var(--color-fondo);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.9rem;
+}
+
+nav a:hover,
+nav a[aria-current="page"] {
+    color: var(--color-acento-claro);
+}
+
+/* Página actual: subrayado dorado */
+nav a[aria-current="page"] {
+    box-shadow: inset 0 -3px 0 var(--color-acento-claro);
+}
+
+nav .bienvenida {
+    padding: 0.7rem 1rem;
+    color: var(--color-borde);
+    font-size: 0.9rem;
+}
+
+/* ---------- Avisos (partials/error.php y $exito_msg de portal.php) ---------- */
+.error,
+.exito {
+    margin: 1rem 2rem 0;
+    padding: 0.8rem 1rem;
+    border-radius: var(--radio);
+    border-left: 6px solid;
+}
+
+.error {
+    background: var(--color-error-fondo);
+    border-color: var(--color-error);
+    color: var(--color-error);
+}
+
+.error ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.exito {
+    background: var(--color-exito-fondo);
+    border-color: var(--color-exito);
+    color: var(--color-exito);
+}
+
+/* ---------- Contenido ---------- */
+main {
+    grid-column: 1;
+    min-width: 0;
+    padding: 1rem 2rem 2rem;
+}
+
+/* ---------- Listado de actos: <ul class="actos"> con un <article> por acto ---------- */
+.actos {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 1.5rem;
+}
+
+.actos article {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 1.2rem;
+    background: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-top: 5px solid var(--color-primario);
+    box-shadow: 0 2px 6px rgba(43, 29, 26, 0.08);
+}
+
+.actos h3 {
+    margin: 0.2rem 0;
+    font-size: 1.35rem;
+}
+
+.actos p {
+    margin: 0.3rem 0;
+}
+
+.actos .fecha {
+    color: var(--color-acento-texto);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+}
+
+.actos .lugar {
+    color: var(--color-texto-suave);
+    font-style: italic;
+}
+
+/* Precio y botón de compra, siempre abajo de la tarjeta */
+.actos .pie-acto {
+    margin-top: auto;
+    padding-top: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.precio {
+    font-family: var(--fuente-titulos);
+    font-size: 1.3rem;
+    font-weight: 800;
+}
+
+/* ---------- Botones (también un <a class="boton">) ---------- */
+.boton,
+button,
+input[type="submit"] {
+    display: inline-block;
+    background: var(--color-primario);
+    color: var(--color-fondo);
+    border: 0;
+    border-radius: var(--radio);
+    padding: 0.55rem 1.1rem;
+    font: 600 1rem var(--fuente-texto);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.boton:hover,
+button:hover,
+input[type="submit"]:hover {
+    background: var(--color-primario-oscuro);
+}
+
+/* ---------- Formularios ---------- */
+label {
+    font-weight: 600;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+    padding: 0.45rem;
+    font: 1rem var(--fuente-texto);
+    color: var(--color-texto);
+    background: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio);
+}
+
+/* Filtros de búsqueda en una fila: <form class="filtros"> con un <p> por campo */
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+    padding: 1rem;
+    background: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+}
+
+.filtros p {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---------- Formularios de usuario (las mismas clases que css/usuarios.css, persona A) ---------- */
+.form-usuario form {
+    max-width: 30em;
+}
+
+.form-usuario form p {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 1em 0;
+}
+
+.form-usuario small {
+    color: var(--color-texto-suave);
+}
+
+/* Mensaje de error junto al campo (lo escribe el JavaScript) */
+.form-usuario .error-campo {
+    color: var(--color-error);
+    min-height: 1.2em;
+}
+
+/* Campo marcado como incorrecto */
+.form-usuario input[aria-invalid="true"] {
+    border: 2px solid var(--color-error);
+}
+
+.form-usuario .botones {
+    flex-direction: row;
+    gap: 1em;
+}
+
+/* ---------- Aside de noticias del WordPress: <aside class="noticias"> ---------- */
+.noticias {
+    grid-column: 2;
+    align-self: start;
+    width: 18rem;
+    margin: 1rem 2rem 2rem 0;
+    padding: 1rem 1.2rem;
+    background: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+}
+
+.noticias h2 {
+    margin-top: 0;
+    font-size: 1.3rem;
+}
+
+.noticias ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.noticias li {
+    padding: 0.6rem 0;
+    border-bottom: 1px dotted var(--color-borde);
+}
+
+.noticias time {
+    display: block;
+    color: var(--color-texto-suave);
+    font-size: 0.85rem;
+}
+
+/* ---------- Pie ---------- */
+footer {
+    background: var(--color-texto);
+    color: var(--color-borde);
+    text-align: center;
+    padding: 1.2rem;
+    font-size: 0.9rem;
+}
+
+footer p {
+    margin: 0.3rem 0;
+}
+
+footer a {
+    color: var(--color-acento-claro);
+}
+
+/* ---------- Móvil: una sola columna ---------- */
+@media (max-width: 48rem) {
+    body {
+        grid-template-columns: 1fr;
+    }
+
+    main {
+        padding: 1rem;
+    }
+
+    .noticias {
+        grid-column: 1;
+        width: auto;
+        margin: 0 1rem 1.5rem;
+    }
+
+    .error,
+    .exito {
+        margin: 1rem 1rem 0;
+    }
+}
