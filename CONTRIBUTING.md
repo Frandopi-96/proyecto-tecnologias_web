@@ -1,7 +1,7 @@
 # Cómo trabajamos
 
 ## 1. El tablero
-Repositorio → pestaña **Projects** → "Portal cultural - reparto". Cada tarjeta es una issue.
+Repositorio → pestaña **Projects** → "Portal cultural". Cada tarjeta es una issue.
 
 | Campo | Para qué |
 |---|---|

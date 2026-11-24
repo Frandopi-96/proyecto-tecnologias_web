@@ -12,7 +12,7 @@ Proyecto de grupo (4 personas) de la asignatura EI1042, UJI.
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Cómo trabajar: tablero, issues, ramas y Pull Requests |
 | [docs/memoria/INDICE.md](docs/memoria/INDICE.md) | Quién escribe cada capítulo de la memoria |
 
-Tablero de tareas: pestaña **Projects** del repositorio → "Portal cultural - reparto".
+Tablero de tareas: pestaña **Projects** del repositorio → "Portal cultural".
 
 ## Restricciones del enunciado
 - Sin librerías externas (nada de Bootstrap, jQuery…): PHP, HTML, CSS y JavaScript nativos.

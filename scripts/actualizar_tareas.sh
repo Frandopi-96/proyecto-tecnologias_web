@@ -9,7 +9,7 @@ set -euo pipefail
 
 OWNER="Frandopi-96"
 REPO="$OWNER/proyecto-tecnologias_web"
-TITULO="Portal cultural - reparto"
+TITULO="Portal cultural"
 declare -A GRUPO=(
   [A]="A - Usuarios y sesiones"
   [B]="B - Actos (admin)"
