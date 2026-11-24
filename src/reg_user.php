@@ -59,8 +59,11 @@ try {
 
 if (count($error_msg) == 0) {
     $exito_msg = "Registro completado, $login. Ya puedes iniciar sesión";
-    $_POST = [];                         // el formulario no se vuelve a rellenar
-    $central = "/partials/home.php";     // con la #3: formulario de login
+    // Como en B3: tras registrarse se muestra el login con el usuario ya escrito
+    $_POST = ["login" => $login];
+    $central = "/partials/form_login.php";
+    array_push($js, "js/login.js");
+    array_push($css, "css/usuarios.css");
 } else {
     $central = "/partials/form_user.php";
     array_push($js, "js/registro.js");

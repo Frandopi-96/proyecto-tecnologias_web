@@ -76,6 +76,27 @@ switch ($action) {
             array_push($css, "css/usuarios.css");
         }
         break;
+    case "login_user":  // GET (enlace del menú): formulario; POST (envío): se procesa
+        if (esta_logueado()) {
+            array_push($error_msg, "Ya has iniciado sesión");
+            $central = "/partials/home.php";
+        } elseif ($_SERVER["REQUEST_METHOD"] === "POST") {
+            require_once(dirname(__FILE__) . "/login_user.php");   // decide $central
+        } else {
+            $central = "/partials/form_login.php";
+            array_push($js, "js/login.js");
+            array_push($css, "css/usuarios.css");
+        }
+        break;
+    case "exit":        // cerrar sesión (B3 Pas_11)
+        $_SESSION = [];                          // vacía las variables: el menú ya sale sin usuario
+        $params = session_get_cookie_params();
+        setcookie(session_name(), "", time() - 3600,   // caducada: el navegador borra la cookie
+                  $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+        session_destroy();                       // borra la sesión del servidor
+        $exito_msg = "Has cerrado la sesión";
+        $central = "/partials/home.php";
+        break;
     default:
         array_push($error_msg, "Opción no correcta");
         $central = "/partials/home.php";

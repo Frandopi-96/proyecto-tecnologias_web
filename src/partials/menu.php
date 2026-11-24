@@ -18,6 +18,7 @@
 <?php if (!esta_logueado()): ?>
         <!-- Solo sin sesión -->
         <li><a href="portal.php?action=form_user">Registrarse</a></li>
+        <li><a href="portal.php?action=login_user">Iniciar sesión</a></li>
 <?php endif; ?>
 
 <?php if (esta_logueado()): ?>
@@ -29,6 +30,7 @@
 <?php endif; ?>
 
 <?php if (esta_logueado()): ?>
+        <li><a href="portal.php?action=exit">Salir</a></li>
         <li class="bienvenida">Bienvenido <?php print(htmlspecialchars($_SESSION["user"])); ?></li>
 <?php endif; ?>
     </ul>
