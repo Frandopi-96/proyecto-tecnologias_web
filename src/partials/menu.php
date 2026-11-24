@@ -1,37 +1,46 @@
 <?php
 /**
  * Menú de navegación según el rol (B3 Pas_10).
- *   - Todos: opciones comunes.
- *   - Con sesión (client o gestor): opciones de cliente y saludo.
- *   - Gestor: además, las opciones de gestión.
- * Cada persona añade aquí el enlace de su página en el bloque que toque.
- * Los permisos se comprueban también en portal.php ($permisos).
+ *
+ * Cada opción indica para quién se muestra con los niveles de tiene_acceso()
+ * (includedb/sesion.php): "todos", "anonimo", "logueado" (client y gestor) o "gestor".
+ * Para añadir vuestra página: una línea en el bloque que toque. Si no es para
+ * "todos", poned el mismo nivel en $permisos de portal.php: ocultar el enlace
+ * no basta, el servidor también lo comprueba.
+ *
+ * La opción de la página actual lleva aria-current="page" (accesibilidad).
  *
  * @author Juan (persona A)
  */
+
+$opciones_menu = [
+    // Todos
+    ["action" => "home",       "texto" => "Inicio",          "nivel" => "todos"],
+
+    // Sin sesión
+    ["action" => "form_user",  "texto" => "Registrarse",     "nivel" => "anonimo"],
+    ["action" => "login_user", "texto" => "Iniciar sesión",  "nivel" => "anonimo"],
+
+    // Cliente (y gestor)
+
+    // Solo gestor
+
+    // Con sesión, al final
+    ["action" => "exit",       "texto" => "Salir",           "nivel" => "logueado"],
+];
 ?>
 <nav aria-label="Menú principal">
     <ul>
-        <!-- Todos los usuarios -->
-        <li><a href="portal.php?action=home">Inicio</a></li>
-
-<?php if (!esta_logueado()): ?>
-        <!-- Solo sin sesión -->
-        <li><a href="portal.php?action=form_user">Registrarse</a></li>
-        <li><a href="portal.php?action=login_user">Iniciar sesión</a></li>
+<?php foreach ($opciones_menu as $opcion): ?>
+<?php if (tiene_acceso($opcion["nivel"])): ?>
+        <li><a href="portal.php?action=<?php print($opcion["action"]); ?>"<?php
+            if ($opcion["action"] == $action) print(' aria-current="page"'); ?>><?php
+            print(htmlspecialchars($opcion["texto"])); ?></a></li>
 <?php endif; ?>
-
+<?php endforeach; ?>
 <?php if (esta_logueado()): ?>
-        <!-- Cliente (y gestor) -->
-<?php endif; ?>
-
-<?php if (es_gestor()): ?>
-        <!-- Solo gestor -->
-<?php endif; ?>
-
-<?php if (esta_logueado()): ?>
-        <li><a href="portal.php?action=exit">Salir</a></li>
-        <li class="bienvenida">Bienvenido <?php print(htmlspecialchars($_SESSION["user"])); ?></li>
+        <li class="bienvenida">Bienvenido <strong><?php print(htmlspecialchars($_SESSION["user"])); ?></strong>
+            (<?php print($_SESSION["rol"] == "gestor" ? "gestor" : "cliente"); ?>)</li>
 <?php endif; ?>
     </ul>
 </nav>

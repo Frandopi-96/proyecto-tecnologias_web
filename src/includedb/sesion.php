@@ -42,3 +42,37 @@ function es_gestor()
 {
     return esta_logueado() && $_SESSION["rol"] == "gestor";
 }
+
+/**
+ * Control de acceso por niveles (Tema 2: autorización basada en roles, RBAC).
+ * Lo usan el menú, $permisos de portal.php y los ficheros de api/:
+ *   "todos"    -> cualquiera
+ *   "anonimo"  -> solo sin sesión (registrarse, iniciar sesión)
+ *   "logueado" -> con sesión: client o gestor (el gestor puede todo lo del client, B3 Pas_10)
+ *   "gestor"   -> solo el gestor
+ */
+function tiene_acceso($nivel)
+{
+    switch ($nivel) {
+        case "todos":    return true;
+        case "anonimo":  return !esta_logueado();
+        case "logueado": return esta_logueado();
+        case "gestor":   return es_gestor();
+        default:         return false;   // nivel mal escrito: mejor denegar
+    }
+}
+
+/**
+ * Para los ficheros de api/: si el usuario no tiene el nivel pedido, responde
+ * 403 con {"error": "..."} en JSON y termina. El JS lo detecta con response.ok (Tema 4).
+ */
+function api_exigir_acceso($nivel)
+{
+    if (!tiene_acceso($nivel)) {
+        http_response_code(403);
+        header("Content-Type: application/json; charset=UTF-8");
+        $mensaje = esta_logueado() ? "No tienes permiso para esta consulta" : "Debes iniciar sesión";
+        echo json_encode(["error" => $mensaje]);
+        exit;
+    }
+}

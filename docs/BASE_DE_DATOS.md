@@ -46,7 +46,11 @@ $_SESSION['ultima_accion'] = time();
 
 function esta_logueado() { return isset($_SESSION["user"]); }
 function es_gestor()     { return esta_logueado() && $_SESSION["rol"] == "gestor"; }
+function tiene_acceso($nivel)      { /* "todos", "anonimo", "logueado" o "gestor" */ }
+function api_exigir_acceso($nivel) { /* si no tiene acceso: 403 + {"error": ...} y exit */ }
 ```
+- `tiene_acceso()` lo usan el menú (`$opciones_menu`) y `$permisos` de `portal.php`. El gestor tiene acceso a todo lo de `logueado`.
+- En `portal.php`, si falta la sesión se muestra el login con "Debes iniciar sesión..."; si falta el rol, "Autorización no permitida".
 - **Login** (`login_user`): buscar el login en `portal_clientes`, comprobar con
   `password_verify($pwd, $fila['password'])` y guardar `$_SESSION["user"]`, `$_SESSION["rol"]`, `$_SESSION["id"]`.
   Si falla: "Autentificación no correcta" y volver al formulario.
@@ -122,8 +126,8 @@ Antes de incluirlos se pone `$es_api = true;` para que, si falla la conexión, e
 $es_api = true;
 require_once(dirname(__FILE__) . "/../includedb/sesion.php");
 require_once(dirname(__FILE__) . "/../includedb/conexion.php");
+api_exigir_acceso("gestor");   // o "logueado"; si no tiene acceso responde 403 y termina
 header('Content-Type: application/json');
-if (!es_gestor()) { http_response_code(403); echo json_encode(["error" => "No autorizado"]); exit; }
 echo json_encode($datos);
 ```
 | Fichero | Persona | Devuelve |

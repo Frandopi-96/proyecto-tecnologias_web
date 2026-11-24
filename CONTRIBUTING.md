@@ -40,8 +40,10 @@ Repositorio → pestaña **Projects** → "Portal cultural". Cada tarjeta es una
 - **Solo lo visto en la asignatura** (tabla en el README). Si usas algo nuevo, explícalo en la memoria.
 - Ficheros y variables en minúscula con guion bajo: `form_compra.php`, `$lista_actos`.
 - Nueva página: un `case` en `portal.php` + su `partial` en `src/partials/` (sin `<main>`: lo pone `portal.php`).
-  Si es solo para usuarios con sesión o para el gestor, añade la acción a `$permisos` (`"logueado"` o `"gestor"`)
-  y su enlace en el bloque que toque de `partials/menu.php`.
+  Si es solo para usuarios con sesión o para el gestor, añade la acción a `$permisos` (`"logueado"` o `"gestor"`).
+  Enlace en el menú: una línea en el bloque que toque de `$opciones_menu` (`partials/menu.php`), con el mismo nivel:
+  `["action" => "form_compra", "texto" => "Comprar entradas", "nivel" => "logueado"],`
+  Niveles (`tiene_acceso()` en `includedb/sesion.php`): `todos`, `anonimo`, `logueado` (client y gestor), `gestor`.
 - JavaScript: en el `case`, `array_push($js, "js/<parte>.js");` y `header.php` lo carga en el `<head>` con `defer`
   (Tema 3). **Prohibido JS dentro de atributos HTML** (`onclick="..."`): todo con `addEventListener`.
   Para un CSS propio: `array_push($css, "css/<parte>.css");`.
