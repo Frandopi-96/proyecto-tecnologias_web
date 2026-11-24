@@ -116,8 +116,12 @@ try { ... } catch (PDOException $e) { array_push($error_msg, "No se ha podido gu
 ```
 
 ## 5. Ficheros de `src/api/` (peticiones con `fetch`, Tema 4)
-Cada uno incluye `includedb/sesion.php` e `includedb/conexion.php` y responde JSON:
+Cada uno incluye `includedb/sesion.php` e `includedb/conexion.php` y responde JSON.
+Antes de incluirlos se pone `$es_api = true;` para que, si falla la conexión, el error también llegue en JSON:
 ```php
+$es_api = true;
+require_once(dirname(__FILE__) . "/../includedb/sesion.php");
+require_once(dirname(__FILE__) . "/../includedb/conexion.php");
 header('Content-Type: application/json');
 if (!es_gestor()) { http_response_code(403); echo json_encode(["error" => "No autorizado"]); exit; }
 echo json_encode($datos);
