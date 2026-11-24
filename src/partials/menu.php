@@ -15,6 +15,11 @@
         <!-- Todos los usuarios -->
         <li><a href="portal.php?action=home">Inicio</a></li>
 
+<?php if (!esta_logueado()): ?>
+        <!-- Solo sin sesión -->
+        <li><a href="portal.php?action=form_user">Registrarse</a></li>
+<?php endif; ?>
+
 <?php if (esta_logueado()): ?>
         <!-- Cliente (y gestor) -->
 <?php endif; ?>
