@@ -39,7 +39,12 @@ Repositorio → pestaña **Projects** → "Portal cultural". Cada tarjeta es una
 ## 5. Código
 - **Solo lo visto en la asignatura** (tabla en el README). Si usas algo nuevo, explícalo en la memoria.
 - Ficheros y variables en minúscula con guion bajo: `form_compra.php`, `$lista_actos`.
-- Nueva página: un `case` en `portal.php` + su `partial` en `src/partials/`.
+- Nueva página: un `case` en `portal.php` + su `partial` en `src/partials/` (sin `<main>`: lo pone `portal.php`).
+  Si es solo para usuarios con sesión o para el gestor, añade la acción a `$permisos` (`"logueado"` o `"gestor"`)
+  y su enlace en el bloque que toque de `partials/menu.php`.
+- JavaScript: en el `case`, `array_push($js, "js/<parte>.js");` y `header.php` lo carga en el `<head>` con `defer`
+  (Tema 3). **Prohibido JS dentro de atributos HTML** (`onclick="..."`): todo con `addEventListener`.
+  Para un CSS propio: `array_push($css, "css/<parte>.css");`.
 - Nueva petición asíncrona: un fichero en `src/api/` que devuelve JSON.
 - Todo formulario se valida en el navegador (eventos del DOM) **y** en PHP.
 - El JS de cada uno en su propio fichero: `src/js/<parte>.js` (p. ej. `compra.js`, `juego.js`).
