@@ -63,6 +63,19 @@ switch ($action) {
     case "home":
         $central = "/partials/home.php";
         break;
+    case "form_user":   // formulario de registro de clientes (persona A)
+    case "reg_user":    // procesa el registro (POST)
+        if (esta_logueado()) {
+            array_push($error_msg, "Ya has iniciado sesión");
+            $central = "/partials/home.php";
+        } elseif ($action == "reg_user" && $_SERVER["REQUEST_METHOD"] === "POST") {
+            require_once(dirname(__FILE__) . "/reg_user.php");   // decide $central
+        } else {
+            $central = "/partials/form_user.php";
+            array_push($js, "js/registro.js");
+            array_push($css, "css/usuarios.css");
+        }
+        break;
     default:
         array_push($error_msg, "Opción no correcta");
         $central = "/partials/home.php";
