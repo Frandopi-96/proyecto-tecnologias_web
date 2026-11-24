@@ -59,7 +59,7 @@ body {
 
 /* Lo que ocupa todo el ancho */
 header,
-nav,
+body > nav,
 .error,
 .exito,
 footer {
@@ -96,7 +96,7 @@ button:focus-visible {
 
 /* Sobre fondo oscuro (cabecera, menú y pie), el dorado claro */
 header a:focus-visible,
-nav a:focus-visible,
+body > nav a:focus-visible,
 footer a:focus-visible {
     outline-color: var(--color-acento-claro);       /* 4,7:1 o más */
 }
@@ -127,12 +127,13 @@ header p {
     font-style: italic;
 }
 
-/* ---------- Menú (partials/menu.php) ---------- */
-nav {
+/* ---------- Menú (partials/menu.php) ----------
+ * Con "body > nav" solo se aplica al menú principal, no a otros <nav> dentro de <main>. */
+body > nav {
     background: var(--color-primario-oscuro);
 }
 
-nav ul {
+body > nav ul {
     list-style: none;
     margin: 0;
     padding: 0 1rem;
@@ -141,7 +142,7 @@ nav ul {
     justify-content: center;
 }
 
-nav a {
+body > nav a {
     display: block;
     padding: 0.7rem 1rem;
     color: var(--color-fondo);
@@ -151,17 +152,17 @@ nav a {
     font-size: 0.9rem;
 }
 
-nav a:hover,
-nav a[aria-current="page"] {
+body > nav a:hover,
+body > nav a[aria-current="page"] {
     color: var(--color-acento-claro);
 }
 
 /* Página actual: subrayado dorado */
-nav a[aria-current="page"] {
+body > nav a[aria-current="page"] {
     box-shadow: inset 0 -3px 0 var(--color-acento-claro);
 }
 
-nav .bienvenida {
+body > nav .bienvenida {
     padding: 0.7rem 1rem;
     color: var(--color-borde);
     font-size: 0.9rem;

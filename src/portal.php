@@ -110,6 +110,9 @@ switch ($action) {
         array_push($js, "js/clientes.js");
         array_push($css, "css/usuarios.css");
         break;
+    case "politica_legal":     // página estática para todos (persona C)
+        $central = "/partials/politica_legal.php";
+        break;
     default:
         array_push($error_msg, "Opción no correcta");
         $central = "/partials/home.php";
