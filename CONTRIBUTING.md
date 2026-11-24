@@ -24,34 +24,35 @@ Repositorio → pestaña **Projects** → "Portal cultural". Cada tarjeta es una
    git add . && git commit -m "Añade formulario de registro"
    git push -u origin ana/form-registro
    ```
-5. **Abre el Pull Request** (`gh pr create` o desde la web). En la descripción escribe **`Closes #2`**.
+5. **Abre el Pull Request** (`gh pr create --fill` o desde la web). En la descripción escribe **`Closes #2`**.
 6. **Otra persona del grupo lo revisa** y lo aprueba. Después se hace merge.
 7. Al hacer merge, la issue se cierra sola y la tarjeta pasa a **Done**.
 
 ## 3. Ramas
 - `main`: solo código que funciona. **Nadie hace push directo a `main`.**
 - Una rama por tarea: `nombre/descripcion-corta` (minúsculas, sin tildes ni espacios).
-- Antes de pedir revisión: `git pull origin main` en tu rama y comprobar que todo sigue funcionando.
+- Mientras trabajas, trae lo nuevo de vez en cuando: `git pull origin main`.
 
 ## 4. Commits
 - En presente y diciendo qué hacen: "Añade listado de actos", "Corrige validación de fecha".
 
 ## 5. Código
+- **Solo lo visto en la asignatura** (tabla en el README). Si usas algo nuevo, explícalo en la memoria.
 - Ficheros y variables en minúscula con guion bajo: `form_compra.php`, `$lista_actos`.
 - Nueva página: un `case` en `portal.php` + su `partial` en `src/partials/`.
-- Nueva petición asíncrona: un fichero en `src/api/` que incluye `cargar_wp.php` y devuelve JSON.
-- Todo formulario lleva validación en el navegador (eventos del DOM) **y** en PHP; todo listado
-  se carga con `fetch` (esquema común en [docs/REPARTO.md](docs/REPARTO.md)).
-- El JS de cada uno va en su propio fichero: `src/js/<parte>.js` (p. ej. `compra.js`, `juego.js`).
-- Colores y fuentes: usar siempre las variables CSS comunes (`var(--color-principal)`…), no valores sueltos.
+- Nueva petición asíncrona: un fichero en `src/api/` que devuelve JSON.
+- Todo formulario se valida en el navegador (eventos del DOM) **y** en PHP.
+- El JS de cada uno en su propio fichero: `src/js/<parte>.js` (p. ej. `compra.js`, `juego.js`).
+- Estilos comunes en `css/estilo.css` (de C); lo propio de cada parte en `css/<parte>.css`.
 - Cabecera en cada fichero (qué hace y autor) y comentarios en lo importante.
-- Reglas de base de datos y seguridad: **obligatorio leer [docs/BASE_DE_DATOS.md](docs/BASE_DE_DATOS.md)**
-  (`wp_unslash`, `$wpdb->prepare`, permisos en el servidor, `htmlspecialchars`).
+- **Reglas de BD y seguridad: obligatorio leer [docs/BASE_DE_DATOS.md](docs/BASE_DE_DATOS.md)**
+  (PDO con `prepare`, permisos en el servidor, `htmlspecialchars`, errores).
 - Nada de librerías externas.
 
 ## 6. Lo que NUNCA se sube
-`src/config.php` y `wp-config.php` (rutas y contraseñas de cada uno). Ya están en `.gitignore`.
+`src/includedb/gestion_BD.php` (contraseña de la BD) y las imágenes generadas
+(`media/firmas`, `media/avatares`). Ya están en `.gitignore`.
 
 ## 7. Ficheros compartidos
-`portal.php`, `cargar_wp.php`, `header.php`, `menu.php`, `footer.php` y el CSS global los tocan todos:
+`portal.php`, `includedb/*`, `header.php`, `menu.php`, `footer.php` y `css/estilo.css` los tocan todos:
 avisad por el grupo antes de cambiarlos para evitar conflictos.

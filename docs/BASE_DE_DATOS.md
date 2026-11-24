@@ -1,113 +1,154 @@
-# Base de datos
+# Base de datos, sesiones y reglas de código
 
-**Todo se guarda en la base de datos de WordPress** (indicación de la profesora para usuarios y
-contraseñas; actos, entradas y puntuaciones van en la misma BD para tenerlo todo en un sitio).
-> Pendiente de confirmar con la profesora que las tablas propias también pueden ir ahí.
+Todo sigue el **Tema 2** (cookies, sesiones, control de acceso y PDO) y el **boletín B3** (login y roles).
 
-## Cómo se carga WordPress
-`src/cargar_wp.php` (tarea #1, persona A) — lo incluyen `portal.php` y todos los ficheros de `src/api/`:
+> Indicación de la profesora: guardar usuarios y contraseñas en la **BD de WordPress**.
+> Lo hacemos así: conectamos con PDO a la BD que creamos para WordPress (`wp_alxxxx`) y creamos
+> en ella **nuestras propias tablas** con prefijo `portal_` (no tocamos las tablas `wp_` de WordPress).
+> Pendiente de confirmar con la profesora (tarea de B).
+
+## 1. Conexión (persona A) — como `gestion_BD.php` + `portalBD.php` del Tema 2
+`src/includedb/gestion_BD.php` (cada uno el suyo, no se sube; plantilla en `gestion_BD.example.php`):
+```php
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'wp_alxxxx');
+define('DB_USER', 'alxxxx');
+define('DB_PASSWORD', 'uji');
+```
+`src/includedb/conexion.php`:
 ```php
 <?php
-require_once(__DIR__ . "/config.php");   // define WP_PATH
-require_once(WP_PATH . "/wp-load.php");  // funciones de WordPress + $wpdb
-global $wpdb;
-
-function es_admin()      { return current_user_can('manage_options'); } // administrator
-function esta_logueado() { return is_user_logged_in(); }                // registrado o admin
+require_once(dirname(__FILE__) . "/gestion_BD.php");
+try {
+    $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
+                   DB_USER, DB_PASSWORD);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo "<p>Error al acceder a la base de datos.</p>";
+    exit;
+}
 ```
 
-## 1. Usuarios → tablas de WordPress (`wp_users`, `wp_usermeta`)
-**No creamos tabla de usuarios.** Se usan las funciones de WordPress (cifran las contraseñas solas):
+## 2. Sesión y roles (persona A) — como `portal.php` de B3
+`src/includedb/sesion.php` (lo incluyen `portal.php` y todos los `api/*.php`):
+```php
+<?php
+$tiempo_max = 20 * 60;
+ini_set('session.gc_maxlifetime', $tiempo_max);
+session_name("PORTALCULTURAL");
+session_start();
+// caducidad por inactividad (como B3)
+if (isset($_SESSION['ultima_accion']) && time() - $_SESSION['ultima_accion'] >= $tiempo_max) {
+    session_unset(); session_destroy(); session_start();
+}
+$_SESSION['ultima_accion'] = time();
 
-| Para… | Función | Notas |
-|---|---|---|
-| Registrar | `wp_insert_user(['user_login'=>..., 'user_pass'=>..., 'user_email'=>..., 'role'=>'subscriber'])` | Devuelve el id o un `WP_Error` |
-| Iniciar sesión | `wp_signon(['user_login'=>..., 'user_password'=>..., 'remember'=>false])` | Llamar **antes** de imprimir nada (envía cookies). Después `wp_set_current_user($user->ID)` |
-| Cerrar sesión | `wp_logout()` | |
-| Usuario actual | `wp_get_current_user()`, `get_current_user_id()` | id 0 = anónimo |
-| ¿Está logueado? | `is_user_logged_in()` | |
-| ¿Es admin? | `current_user_can('manage_options')` | |
-| Listar usuarios | `get_users()` | Solo admin |
-| Preferencias | `update_user_meta($id, 'portal_tema', 'oscuro')` / `get_user_meta($id, 'portal_tema', true)` | Personalización (A) |
-| Avatar | `update_user_meta($id, 'portal_avatar', $png_base64)` | Canvas de A: `canvas.toDataURL('image/png')` |
-| Suscripción correo | `update_user_meta($id, 'portal_suscrito', 1)` | Persona C |
-| Errores | `is_wp_error($r)` y `$r->get_error_message()` | Mostrar el mensaje al usuario |
+function esta_logueado() { return isset($_SESSION["user"]); }
+function es_gestor()     { return esta_logueado() && $_SESSION["rol"] == "gestor"; }
+```
+- **Login** (`login_user`): buscar el login en `portal_clientes`, comprobar con
+  `password_verify($pwd, $fila['password'])` y guardar `$_SESSION["user"]`, `$_SESSION["rol"]`, `$_SESSION["id"]`.
+  Si falla: "Autentificación no correcta" y volver al formulario.
+- **Registro** (`reg_user`): contraseña guardada con `password_hash($pwd, PASSWORD_DEFAULT)` (cifrada) y rol `client`.
+  Reglas de B3: login mínimo 7 caracteres y no repetido; contraseña mínimo 7 caracteres con al menos 1 número.
+- **Logout** (`exit`): `session_unset()`, `session_destroy()` y borrar la cookie de sesión con `setcookie()`.
+- **Personalización** (A): preferencia del cliente en una **cookie** (`setcookie`, Tema 2), p. ej. tema claro/oscuro.
 
-**Nada de `$_SESSION` para el login**: WordPress gestiona la sesión con sus cookies.
+## 3. Tablas (las crea `src/instalar.php`, persona B)
+Todas en la BD `wp_alxxxx`, motor InnoDB, `utf8mb4`.
 
-## 2. Tablas propias (las crea `src/instalar.php`, persona B)
-Prefijo: `$wpdb->prefix` (normalmente `wp_`).
-
-**`wp_portal_actos`** (persona B)
+**`portal_clientes`** (A)
 | Campo | Tipo |
 |---|---|
-| id | BIGINT UNSIGNED, PK, AUTO_INCREMENT |
+| id | INT UNSIGNED, PK, AUTO_INCREMENT |
+| login | VARCHAR(30) NOT NULL UNIQUE |
+| email | VARCHAR(100) NOT NULL |
+| password | VARCHAR(255) NOT NULL — resultado de `password_hash()` |
+| rol | VARCHAR(10) NOT NULL DEFAULT 'client' — `client` o `gestor` |
+| suscrito | TINYINT(1) NOT NULL DEFAULT 0 — suscripción al correo (C) |
+| avatar | VARCHAR(255) NULL — ruta del PNG (`media/avatares/<id>.png`) (A) |
+
+**`portal_actos`** (B)
+| Campo | Tipo |
+|---|---|
+| id | INT UNSIGNED, PK, AUTO_INCREMENT |
 | titulo | VARCHAR(150) NOT NULL |
 | descripcion | TEXT |
 | fecha | DATETIME NOT NULL |
 | lugar | VARCHAR(150) NOT NULL |
 | precio | DECIMAL(6,2) NOT NULL DEFAULT 0 |
 | aforo | INT UNSIGNED NOT NULL |
-| imagen | VARCHAR(255) |
+| imagen | VARCHAR(255) NULL |
 
-**`wp_portal_entradas`** (persona C)
+**`portal_entradas`** (C)
 | Campo | Tipo |
 |---|---|
-| id | BIGINT UNSIGNED, PK, AUTO_INCREMENT |
-| acto_id | BIGINT UNSIGNED NOT NULL → `wp_portal_actos.id` |
-| user_id | BIGINT UNSIGNED NOT NULL → `wp_users.ID` |
+| id | INT UNSIGNED, PK, AUTO_INCREMENT |
+| acto_id | INT UNSIGNED NOT NULL → `portal_actos.id` |
+| cliente_id | INT UNSIGNED NOT NULL → `portal_clientes.id` |
 | cantidad | INT UNSIGNED NOT NULL |
 | fecha_compra | DATETIME NOT NULL |
-| firma | VARCHAR(255) NULL — ruta del PNG de la firma (`media/firmas/<id>.png`) |
+| firma | VARCHAR(255) NULL — ruta del PNG (`media/firmas/<id>.png`) |
 
-**`wp_portal_puntuaciones`** (persona D)
+**`portal_puntuaciones`** (D)
 | Campo | Tipo |
 |---|---|
-| id | BIGINT UNSIGNED, PK, AUTO_INCREMENT |
-| user_id | BIGINT UNSIGNED NULL (anónimo = NULL) |
-| nombre | VARCHAR(60) NOT NULL |
+| id | INT UNSIGNED, PK, AUTO_INCREMENT |
+| cliente_id | INT UNSIGNED NULL (no registrado = NULL) |
+| nombre | VARCHAR(30) NOT NULL |
 | puntos | INT NOT NULL |
 | fecha | DATETIME NOT NULL |
 
-## 3. Ficheros de `src/api/` (peticiones asíncronas)
-| Fichero | Persona | Devuelve |
-|---|---|---|
-| `usuarios.php` | A | Usuarios (solo admin) |
-| `actos.php` | B | Actos, filtrados por `fecha` y `lugar` si llegan |
-| `ventas.php` | B | Entradas vendidas por acto (solo admin), para el gráfico |
-| `mis_entradas.php` | C | Entradas del usuario con sesión |
-| `guardar_puntuacion.php` | D | Guarda una puntuación (POST) |
-| `ranking.php` | D | 10 mejores puntuaciones |
-
-Si no hay permiso: `http_response_code(403)` y `{"error": "mensaje"}`; el JS muestra el mensaje.
-
-## 4. Imágenes de Canvas
-- **Avatar (A):** `canvas.toDataURL('image/png')` → campo oculto del formulario → `user_meta`.
-- **Firma (C):** igual, pero PHP decodifica el base64 y guarda el PNG en `src/media/firmas/<id>.png`
-  (como `html_grafico_guardar.php` del boletín B4); la ruta va en `wp_portal_entradas.firma`.
-
-## 5. Consultas con `$wpdb`
+## 4. Consultas con PDO (Tema 2, apartado 9)
 ```php
-global $wpdb;
-$tabla = $wpdb->prefix . "portal_actos";
+// SELECT con datos del usuario: SIEMPRE prepare + execute (evita la inyección SQL)
+$consulta = $pdo->prepare("SELECT * FROM portal_actos WHERE lugar LIKE ? AND fecha >= ? ORDER BY fecha");
+$consulta->execute(["%$lugar%", $desde]);
+$actos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
-// SELECT con datos del usuario: SIEMPRE prepare (evita inyección SQL)
-$actos = $wpdb->get_results($wpdb->prepare(
-    "SELECT * FROM $tabla WHERE lugar LIKE %s AND fecha >= %s ORDER BY fecha",
-    '%' . $wpdb->esc_like($lugar) . '%', $desde));
+// INSERT / UPDATE / DELETE
+$consulta = $pdo->prepare("INSERT INTO portal_actos (titulo, fecha, lugar, precio, aforo) VALUES (?, ?, ?, ?, ?)");
+$consulta->execute([$titulo, $fecha, $lugar, $precio, $aforo]);
 
-$wpdb->insert($tabla, ['titulo'=>$t, 'fecha'=>$f, 'lugar'=>$l, 'precio'=>$p, 'aforo'=>$a]);
-$wpdb->update($tabla, ['titulo'=>$t], ['id'=>$id]);
-$wpdb->delete($tabla, ['id'=>$id]);
-
-if ($wpdb->last_error) { /* mostrar error */ }
+// Errores
+try { ... } catch (PDOException $e) { array_push($error_msg, "No se ha podido guardar el acto"); }
 ```
 
-## 6. Reglas obligatorias
-1. **Leer `$_POST`/`$_GET` con `wp_unslash()`**: al cargar WordPress se añaden barras a las comillas.
-   `$titulo = trim(wp_unslash($_POST['titulo'] ?? ''));`
-2. **Validar en el servidor** todo dato (vacío, formato de fecha, número > 0…).
-3. **Comprobar permisos en el servidor** (`es_admin()`, `esta_logueado()`), no solo ocultar el menú.
-4. **Escapar la salida** con `htmlspecialchars()` (o `esc_html()`).
-5. **Ficheros de `src/api/`**: incluyen `cargar_wp.php` y responden JSON:
-   `header('Content-Type: application/json'); echo json_encode($datos);`
+## 5. Ficheros de `src/api/` (peticiones con `fetch`, Tema 4)
+Cada uno incluye `includedb/sesion.php` e `includedb/conexion.php` y responde JSON:
+```php
+header('Content-Type: application/json');
+if (!es_gestor()) { http_response_code(403); echo json_encode(["error" => "No autorizado"]); exit; }
+echo json_encode($datos);
+```
+| Fichero | Persona | Devuelve |
+|---|---|---|
+| `clientes.php` | A | Clientes (solo gestor) |
+| `actos.php` | B | Actos, filtrados por `fecha` y `lugar` si llegan |
+| `ventas.php` | B | Entradas vendidas por acto (solo gestor), para el gráfico |
+| `mis_entradas.php` | C | Entradas del cliente con sesión |
+| `guardar_puntuacion.php` | D | Guarda una puntuación (POST con `FormData`) |
+| `ranking.php` | D | 10 mejores puntuaciones |
+
+En JS (Tema 4): `fetch` → comprobar `respuesta.ok` → `respuesta.json()` → pintar con el DOM;
+`catch` para mostrar un mensaje si falla.
+
+## 6. API REST de WordPress (Tema 4)
+| Uso | Persona | URL |
+|---|---|---|
+| Noticias del aside | C | `/EI1036_42/wordpress/?rest_route=/wp/v2/posts&per_page=3` |
+| Imágenes de la galería | D | `/EI1036_42/wordpress/?rest_route=/wp/v2/media&media_type=image` |
+
+## 7. Imágenes de Canvas (B4, pasos 7 y 8)
+`canvas.toDataURL("image/png")` → campo oculto del formulario (o `FormData`) → PHP quita la cabecera
+`data:image/png;base64,`, hace `base64_decode()` y guarda el fichero:
+- Firma (C): `media/firmas/<id_entrada>.png`, ruta en `portal_entradas.firma`.
+- Avatar (A): `media/avatares/<id_cliente>.png`, ruta en `portal_clientes.avatar`.
+
+## 8. Reglas obligatorias para todos
+1. **PDO siempre con `prepare` + `execute`**, nunca meter variables directamente en el SQL.
+2. **Validar en el servidor** todo dato (vacío, longitud, fecha, número > 0…) y también en el navegador con eventos del DOM.
+3. **Comprobar permisos en el servidor** (`esta_logueado()`, `es_gestor()`), no solo ocultar el menú.
+4. **Escapar la salida** con `htmlspecialchars()`.
+5. **Errores**: guardarlos en `$error_msg` y mostrarlos (como B2/B3); en `api/` responder con código HTTP y `{"error": ...}`.

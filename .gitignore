@@ -1,9 +1,13 @@
-# Configuración local con rutas y contraseñas (cada uno la suya)
-src/config.php
+# Datos de conexión a la BD (cada uno los suyos, tienen contraseña)
+src/includedb/gestion_BD.php
 wp-config.php
 
 # WordPress no va en este repositorio
 wordpress/
+
+# Imágenes generadas por el portal (firmas y avatares de Canvas)
+src/media/firmas/
+src/media/avatares/
 
 # Sistema y editores
 .DS_Store
@@ -11,10 +15,6 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
-
-# Subidas de usuarios
-src/media/subidas/
-src/media/firmas/
 
 # Borradores de la memoria
 docs/memoria/*.docx
