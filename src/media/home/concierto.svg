@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" width="320" height="180">
+  <!-- Escenario con piano de cola y atril bajo un foco -->
+  <rect width="320" height="180" fill="#1f2a44"/>
+  <polygon points="160,0 95,150 225,150" fill="#f6e7a8" opacity="0.35"/>
+  <rect x="0" y="150" width="320" height="30" fill="#5a3a22"/>
+  <!-- piano -->
+  <path d="M120 112 h70 q30 0 30 18 v8 h-100 z" fill="#111111"/>
+  <rect x="120" y="106" width="50" height="6" fill="#f2f2f2"/>
+  <rect x="128" y="138" width="5" height="12" fill="#111111"/>
+  <rect x="208" y="138" width="5" height="12" fill="#111111"/>
+  <!-- atril -->
+  <rect x="88" y="104" width="22" height="14" fill="#d9d9d9"/>
+  <rect x="98" y="118" width="3" height="32" fill="#d9d9d9"/>
+</svg>
