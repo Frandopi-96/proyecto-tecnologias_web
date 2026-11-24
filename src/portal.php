@@ -44,16 +44,27 @@ if (array_key_exists('action', $_REQUEST)) {
 
 // Control de acceso por rol (Tema 2: autorización RBAC; B3 Pas_10 y Pas_13).
 // Ocultar la opción del menú no basta: aquí se comprueba en el servidor.
-//   "logueado" -> cualquier usuario con sesión (client o gestor)
-//   "gestor"   -> solo el gestor
-// El gestor también puede hacer todo lo de "logueado" (B3: el gestor ve las opciones del client).
+// Niveles de tiene_acceso() (includedb/sesion.php): "anonimo", "logueado" o "gestor".
+// Las acciones que no están en la tabla son para todos.
 $permisos = [
+    // Parte A: usuarios
+    "form_user"  => "anonimo",
+    "reg_user"   => "anonimo",
+    "login_user" => "anonimo",
+    "exit"       => "logueado",
+    // Cada parte añade aquí sus acciones, p. ej.:
     // "form_compra" => "logueado",
     // "form_acto"   => "gestor",
 ];
-if (array_key_exists($action, $permisos)) {
-    $permitido = ($permisos[$action] == "gestor") ? es_gestor() : esta_logueado();
-    if (!$permitido) {
+if (array_key_exists($action, $permisos) && !tiene_acceso($permisos[$action])) {
+    if ($permisos[$action] == "anonimo") {
+        array_push($error_msg, "Ya has iniciado sesión");
+        $action = "home";
+    } elseif (!esta_logueado()) {
+        // Sin sesión: se ofrece el formulario de login en lugar de la página pedida
+        array_push($error_msg, "Debes iniciar sesión para acceder a esa página");
+        $action = "pedir_login";
+    } else {
         array_push($error_msg, "Autorización no permitida");
         $action = "home";
     }
@@ -62,13 +73,9 @@ if (array_key_exists($action, $permisos)) {
 switch ($action) {
     case "home":
         $central = "/partials/home.php";
-        break;
-    case "form_user":   // formulario de registro de clientes (persona A)
+        break;    case "form_user":   // formulario de registro de clientes (persona A)
     case "reg_user":    // procesa el registro (POST)
-        if (esta_logueado()) {
-            array_push($error_msg, "Ya has iniciado sesión");
-            $central = "/partials/home.php";
-        } elseif ($action == "reg_user" && $_SERVER["REQUEST_METHOD"] === "POST") {
+        if ($action == "reg_user" && $_SERVER["REQUEST_METHOD"] === "POST") {
             require_once(dirname(__FILE__) . "/reg_user.php");   // decide $central
         } else {
             $central = "/partials/form_user.php";
@@ -77,16 +84,15 @@ switch ($action) {
         }
         break;
     case "login_user":  // GET (enlace del menú): formulario; POST (envío): se procesa
-        if (esta_logueado()) {
-            array_push($error_msg, "Ya has iniciado sesión");
-            $central = "/partials/home.php";
-        } elseif ($_SERVER["REQUEST_METHOD"] === "POST") {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
             require_once(dirname(__FILE__) . "/login_user.php");   // decide $central
-        } else {
-            $central = "/partials/form_login.php";
-            array_push($js, "js/login.js");
-            array_push($css, "css/usuarios.css");
+            break;
         }
+        // GET: sigue en "pedir_login" para mostrar el formulario
+    case "pedir_login": // formulario de login (también cuando falta la sesión)
+        $central = "/partials/form_login.php";
+        array_push($js, "js/login.js");
+        array_push($css, "css/usuarios.css");
         break;
     case "exit":        // cerrar sesión (B3 Pas_11)
         $_SESSION = [];                          // vacía las variables: el menú ya sale sin usuario
