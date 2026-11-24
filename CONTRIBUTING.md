@@ -40,6 +40,10 @@ Repositorio → pestaña **Projects** → "Portal cultural". Cada tarjeta es una
 - Ficheros y variables en minúscula con guion bajo: `form_compra.php`, `$lista_actos`.
 - Nueva página: un `case` en `portal.php` + su `partial` en `src/partials/`.
 - Nueva petición asíncrona: un fichero en `src/api/` que incluye `cargar_wp.php` y devuelve JSON.
+- Todo formulario lleva validación en el navegador (eventos del DOM) **y** en PHP; todo listado
+  se carga con `fetch` (esquema común en [docs/REPARTO.md](docs/REPARTO.md)).
+- El JS de cada uno va en su propio fichero: `src/js/<parte>.js` (p. ej. `compra.js`, `juego.js`).
+- Colores y fuentes: usar siempre las variables CSS comunes (`var(--color-principal)`…), no valores sueltos.
 - Cabecera en cada fichero (qué hace y autor) y comentarios en lo importante.
 - Reglas de base de datos y seguridad: **obligatorio leer [docs/BASE_DE_DATOS.md](docs/BASE_DE_DATOS.md)**
   (`wp_unslash`, `$wpdb->prepare`, permisos en el servidor, `htmlspecialchars`).

@@ -29,6 +29,7 @@ function esta_logueado() { return is_user_logged_in(); }                // regis
 | ¿Es admin? | `current_user_can('manage_options')` | |
 | Listar usuarios | `get_users()` | Solo admin |
 | Preferencias | `update_user_meta($id, 'portal_tema', 'oscuro')` / `get_user_meta($id, 'portal_tema', true)` | Personalización (A) |
+| Avatar | `update_user_meta($id, 'portal_avatar', $png_base64)` | Canvas de A: `canvas.toDataURL('image/png')` |
 | Suscripción correo | `update_user_meta($id, 'portal_suscrito', 1)` | Persona C |
 | Errores | `is_wp_error($r)` y `$r->get_error_message()` | Mostrar el mensaje al usuario |
 
@@ -57,6 +58,7 @@ Prefijo: `$wpdb->prefix` (normalmente `wp_`).
 | user_id | BIGINT UNSIGNED NOT NULL → `wp_users.ID` |
 | cantidad | INT UNSIGNED NOT NULL |
 | fecha_compra | DATETIME NOT NULL |
+| firma | VARCHAR(255) NULL — ruta del PNG de la firma (`media/firmas/<id>.png`) |
 
 **`wp_portal_puntuaciones`** (persona D)
 | Campo | Tipo |
@@ -67,7 +69,24 @@ Prefijo: `$wpdb->prefix` (normalmente `wp_`).
 | puntos | INT NOT NULL |
 | fecha | DATETIME NOT NULL |
 
-## 3. Consultas con `$wpdb`
+## 3. Ficheros de `src/api/` (peticiones asíncronas)
+| Fichero | Persona | Devuelve |
+|---|---|---|
+| `usuarios.php` | A | Usuarios (solo admin) |
+| `actos.php` | B | Actos, filtrados por `fecha` y `lugar` si llegan |
+| `ventas.php` | B | Entradas vendidas por acto (solo admin), para el gráfico |
+| `mis_entradas.php` | C | Entradas del usuario con sesión |
+| `guardar_puntuacion.php` | D | Guarda una puntuación (POST) |
+| `ranking.php` | D | 10 mejores puntuaciones |
+
+Si no hay permiso: `http_response_code(403)` y `{"error": "mensaje"}`; el JS muestra el mensaje.
+
+## 4. Imágenes de Canvas
+- **Avatar (A):** `canvas.toDataURL('image/png')` → campo oculto del formulario → `user_meta`.
+- **Firma (C):** igual, pero PHP decodifica el base64 y guarda el PNG en `src/media/firmas/<id>.png`
+  (como `html_grafico_guardar.php` del boletín B4); la ruta va en `wp_portal_entradas.firma`.
+
+## 5. Consultas con `$wpdb`
 ```php
 global $wpdb;
 $tabla = $wpdb->prefix . "portal_actos";
@@ -84,7 +103,7 @@ $wpdb->delete($tabla, ['id'=>$id]);
 if ($wpdb->last_error) { /* mostrar error */ }
 ```
 
-## 4. Reglas obligatorias
+## 6. Reglas obligatorias
 1. **Leer `$_POST`/`$_GET` con `wp_unslash()`**: al cargar WordPress se añaden barras a las comillas.
    `$titulo = trim(wp_unslash($_POST['titulo'] ?? ''));`
 2. **Validar en el servidor** todo dato (vacío, formato de fecha, número > 0…).

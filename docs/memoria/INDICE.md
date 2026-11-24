@@ -6,6 +6,8 @@
    esquema de tablas de `docs/BASE_DE_DATOS.md`.
 3. **Prototipado** — arquitectura de la información y boceto. _(A)_
 4. **Desarrollo e implementación** — cada uno su parte, citando los ficheros. _(A, B, C, D)_
+   Cada uno explica en su apartado: formulario (HTML/CSS, validación DOM, PHP + BD), listado
+   asíncrono (api + fetch), su Canvas y su página estática.
 5. **Evaluación** — pruebas de roles (anónimo, suscriptor, administrador) y eventos, errores corregidos. _(todos; coordina B)_
 6. **Bibliografía / webgrafía / consultas a ChatGPT** — no cuenta en las 10 páginas.
 7. **Anexo** — capturas grandes; no cuenta en las 10 páginas.
