@@ -27,7 +27,9 @@
     --color-acento: #b8862b;         /* dorado: solo líneas y adornos */
     --color-acento-texto: #8a6114;   /* dorado oscuro: texto sobre fondo claro */
     --color-acento-claro: #d9a845;   /* dorado claro: texto sobre granate u oscuro */
-    --color-borde: #d9cbb8;
+    --color-borde: #d9cbb8;          /* solo adornos: tarjetas, separadores */
+    --color-borde-campo: #8c7b6b;    /* borde de campos de formulario (3,7:1 sobre el crema) */
+    --color-fondo-alterno: #f1e8da;  /* filas alternas de las tablas */
     --color-error: #b00020;
     --color-error-fondo: #fbe9eb;
     --color-exito: #2e6b3a;
@@ -82,14 +84,21 @@ a {
     color: var(--color-primario);
 }
 
-/* Foco visible al navegar con el teclado */
+/* Foco visible al navegar con el teclado (contraste mínimo 3:1 con el fondo) */
 a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 button:focus-visible {
-    outline: 3px solid var(--color-acento);
+    outline: 3px solid var(--color-acento-texto);   /* 5,0:1 sobre el crema */
     outline-offset: 2px;
+}
+
+/* Sobre fondo oscuro (cabecera, menú y pie), el dorado claro */
+header a:focus-visible,
+nav a:focus-visible,
+footer a:focus-visible {
+    outline-color: var(--color-acento-claro);       /* 4,7:1 o más */
 }
 
 /* ---------- Cabecera ---------- */
@@ -285,7 +294,7 @@ textarea {
     font: 1rem var(--fuente-texto);
     color: var(--color-texto);
     background: var(--color-superficie);
-    border: 1px solid var(--color-borde);
+    border: 1px solid var(--color-borde-campo);
     border-radius: var(--radio);
 }
 
@@ -306,38 +315,39 @@ textarea {
     flex-direction: column;
 }
 
-/* ---------- Formularios de usuario (las mismas clases que css/usuarios.css, persona A) ---------- */
-.form-usuario form {
-    max-width: 30em;
+/* ---------- Tablas ---------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-superficie);
+    border: 1px solid var(--color-borde);
 }
 
-.form-usuario form p {
-    display: flex;
-    flex-direction: column;
-    margin: 0 0 1em 0;
+caption {
+    text-align: left;
+    font-weight: 600;
+    padding: 0.5rem 0;
 }
 
-.form-usuario small {
-    color: var(--color-texto-suave);
+th,
+td {
+    padding: 0.5rem 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-borde);
 }
 
-/* Mensaje de error junto al campo (lo escribe el JavaScript) */
-.form-usuario .error-campo {
-    color: var(--color-error);
-    min-height: 1.2em;
+thead th {
+    background: var(--color-primario);
+    color: var(--color-fondo);
 }
 
-/* Campo marcado como incorrecto */
-.form-usuario input[aria-invalid="true"] {
-    border: 2px solid var(--color-error);
+tbody tr:nth-child(even) {
+    background: var(--color-fondo-alterno);
 }
 
-.form-usuario .botones {
-    flex-direction: row;
-    gap: 1em;
-}
-
-/* ---------- Aside de noticias del WordPress: <aside class="noticias"> ---------- */
+/* ---------- Aside de noticias del WordPress: <aside class="noticias"> ----------
+ * Va en la columna derecha del <body>, así que portal.php tiene que imprimirlo
+ * DESPUÉS de </main> (no dentro). */
 .noticias {
     grid-column: 2;
     align-self: start;
