@@ -24,6 +24,7 @@ $opciones_menu = [
     // Cliente (y gestor)
 
     // Solo gestor
+    ["action" => "listado_clientes", "texto" => "Clientes", "nivel" => "gestor"],
 
     // Con sesión, al final
     ["action" => "exit",       "texto" => "Salir",           "nivel" => "logueado"],
