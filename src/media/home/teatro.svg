@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" width="320" height="180">
+  <!-- Telón rojo abierto con las máscaras del teatro -->
+  <rect width="320" height="180" fill="#2b1a1a"/>
+  <path d="M0 0 h110 q-20 90 -50 180 h-60 z" fill="#a3161c"/>
+  <path d="M320 0 h-110 q20 90 50 180 h60 z" fill="#a3161c"/>
+  <rect x="0" y="0" width="320" height="22" fill="#7d0f14"/>
+  <!-- máscara alegre -->
+  <ellipse cx="140" cy="92" rx="26" ry="32" fill="#f4d35e"/>
+  <circle cx="130" cy="84" r="4" fill="#2b1a1a"/>
+  <circle cx="150" cy="84" r="4" fill="#2b1a1a"/>
+  <path d="M126 102 q14 14 28 0" stroke="#2b1a1a" stroke-width="4" fill="none"/>
+  <!-- máscara triste -->
+  <ellipse cx="184" cy="100" rx="26" ry="32" fill="#e8e8e8"/>
+  <circle cx="174" cy="92" r="4" fill="#2b1a1a"/>
+  <circle cx="194" cy="92" r="4" fill="#2b1a1a"/>
+  <path d="M170 118 q14 -14 28 0" stroke="#2b1a1a" stroke-width="4" fill="none"/>
+</svg>

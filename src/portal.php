@@ -73,7 +73,8 @@ if (array_key_exists($action, $permisos) && !tiene_acceso($permisos[$action])) {
 switch ($action) {
     case "home":
         $central = "/partials/home.php";
-        break;    case "form_user":   // formulario de registro de clientes (persona A)
+        break;
+    case "form_user":   // formulario de registro de clientes (persona A)
     case "reg_user":    // procesa el registro (POST)
         if ($action == "reg_user" && $_SERVER["REQUEST_METHOD"] === "POST") {
             require_once(dirname(__FILE__) . "/reg_user.php");   // decide $central
@@ -107,6 +108,12 @@ switch ($action) {
         array_push($error_msg, "Opción no correcta");
         $central = "/partials/home.php";
         break;
+}
+
+// La página principal sale desde varias acciones (home, exit, errores...):
+// su hoja de estilos se añade aquí una sola vez
+if ($central == "/partials/home.php") {
+    array_push($css, "css/home.css");
 }
 
 // Carga modular de la página
