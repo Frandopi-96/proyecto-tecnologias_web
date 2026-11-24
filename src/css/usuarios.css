@@ -48,3 +48,40 @@
     flex-direction: row;
     gap: 1em;
 }
+
+/* Listado de clientes (solo gestor) */
+.listado-clientes table {
+    width: 100%;
+    max-width: 50em;
+    border-collapse: collapse;
+}
+
+.listado-clientes caption {
+    text-align: left;
+    font-style: italic;
+    margin-bottom: 0.5em;
+}
+
+.listado-clientes th,
+.listado-clientes td {
+    padding: 0.4em 0.6em;
+    border: 1px solid var(--color-borde, #888);
+    text-align: left;
+}
+
+.listado-clientes thead th {
+    background: var(--color-principal, #6a1b4d);
+    color: #ffffff;
+}
+
+.listado-clientes tbody tr:nth-child(even) {
+    background: var(--color-fondo-alterno, #f2f2f2);
+}
+
+/* En móvil la tabla se desplaza en horizontal en lugar de salirse */
+@media (max-width: 40em) {
+    .listado-clientes table {
+        display: block;
+        overflow-x: auto;
+    }
+}

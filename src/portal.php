@@ -52,6 +52,7 @@ $permisos = [
     "reg_user"   => "anonimo",
     "login_user" => "anonimo",
     "exit"       => "logueado",
+    "listado_clientes" => "gestor",
     // Cada parte añade aquí sus acciones, p. ej.:
     // "form_compra" => "logueado",
     // "form_acto"   => "gestor",
@@ -103,6 +104,11 @@ switch ($action) {
         session_destroy();                       // borra la sesión del servidor
         $exito_msg = "Has cerrado la sesión";
         $central = "/partials/home.php";
+        break;
+    case "listado_clientes":   // solo gestor; la tabla la rellena js/clientes.js con fetch
+        $central = "/partials/listado_clientes.php";
+        array_push($js, "js/clientes.js");
+        array_push($css, "css/usuarios.css");
         break;
     default:
         array_push($error_msg, "Opción no correcta");
