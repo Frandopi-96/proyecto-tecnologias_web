@@ -95,6 +95,9 @@ Todas en la BD `wp_alxxxx`, motor InnoDB, `utf8mb4`.
 | fecha_compra | DATETIME NOT NULL |
 | firma | VARCHAR(255) NULL — ruta del PNG (`media/firmas/<id>.png`) |
 
+Las dos claves foráneas son `ON DELETE RESTRICT`: MySQL **no deja borrar un acto (ni un cliente) con
+entradas vendidas** y lanza una `PDOException`; el borrado de actos tiene que capturarla y avisar al gestor.
+
 **`portal_puntuaciones`** (D)
 | Campo | Tipo |
 |---|---|
