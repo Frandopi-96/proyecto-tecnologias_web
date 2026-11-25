@@ -47,9 +47,14 @@ chmod 777 ../media/firmas ../media/avatares
 ```
 
 ## 5. Crear las tablas
-Cuando esté hecha la tarea de B "Crear tablas (instalar.php)", abre una vez
-<http://localhost/EI1036_42/proyecto-tecnologias_web/src/instalar.php>.
-Crea las tablas `portal_...` dentro de `wp_alxxxx` e inserta actos de ejemplo.
+Abre una vez <http://localhost/EI1036_42/proyecto-tecnologias_web/src/instalar.php>.
+Crea las tablas `portal_...` dentro de `wp_alxxxx` (la BD ya existe: es la de WordPress) e inserta
+actos de ejemplo. La página dice qué tablas ha creado y cuántos actos ha insertado.
+- Se puede volver a ejecutar sin problema: no toca las tablas que ya existen ni duplica los actos.
+  Pero una vez instalado **solo lo puede abrir el gestor** (la primera vez no hay usuarios, así que lo abre cualquiera).
+- Los datos son de tu ordenador: lo que hagas en tu BD no lo ven los demás.
+- **Si cambia el esquema de alguna tabla**, `CREATE TABLE IF NOT EXISTS` no la modifica: en phpMyAdmin
+  borra las tablas `portal_...` (primero `portal_entradas`, que depende de las otras) y vuelve a abrir `instalar.php`.
 
 ## 6. Crear un gestor (como en B3)
 1. Regístrate en el portal con el formulario de registro (queda con rol `client`).

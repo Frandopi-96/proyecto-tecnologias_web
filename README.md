@@ -54,7 +54,7 @@ Tablero de tareas: pestaña **Projects** del repositorio → "Portal cultural".
 ```
 src/
   portal.php                 controlador principal (?action=...)
-  instalar.php               crea las tablas portal_... (ejecutar una vez, como gestor)
+  instalar.php               crea las tablas portal_... y actos de ejemplo (la 1.ª vez cualquiera; luego solo el gestor)
   includedb/
     gestion_BD.example.php   plantilla: copiar como gestion_BD.php (NO se sube)
     conexion.php             crea $pdo (PDO) con gestión de errores
