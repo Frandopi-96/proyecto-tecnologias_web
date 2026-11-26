@@ -1,7 +1,6 @@
 /*
  * Estilos de la página principal (partials/home.php).
- * Los colores comunes vienen de css/estilo.css (persona C); aquí se usan sus
- * variables con un valor por defecto por si aún no existen.
+ * Los colores son las variables de css/estilo.css (persona C).
  *
  * Autor: Juan (persona A)
  */
@@ -30,9 +29,9 @@
 }
 
 .acto {
-    border: 1px solid var(--color-borde, #c8c8c8);
+    border: 1px solid var(--color-borde);
     border-radius: 0.5rem;
-    background: var(--color-fondo-tarjeta, #ffffff);
+    background: var(--color-superficie);
     overflow: hidden;
 }
 
@@ -51,8 +50,8 @@
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    background: var(--color-principal, #6a1b4d);
-    color: #ffffff;
+    background: var(--color-primario);
+    color: var(--color-fondo);
 }
 
 .acto h3 {
