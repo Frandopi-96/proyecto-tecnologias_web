@@ -5,8 +5,9 @@
  * 1. Apariencia (tema claro u oscuro y tamaño del texto), como B4 Pas 11: el
  *    formulario NO se envía al servidor; js/personalizar.js lo guarda en
  *    localStorage para este usuario y lo aplica en todas las páginas.
- * 2. Avatar: se dibuja en un <canvas> con el ratón (B4) y js/perfil.js lo envía
- *    a api/guardar_avatar.php con fetch + FormData (Tema 4).
+ * 2. Avatar: se dibuja en un <canvas> con el ratón (B4), con lápiz o goma, y
+ *    js/perfil.js lo envía a api/guardar_avatar.php con fetch + FormData (Tema 4).
+ *    "Editar mi avatar" carga el PNG guardado en el lienzo (solo si ya hay uno).
  *
  * @author Juan (persona A)
  */
@@ -61,6 +62,17 @@ $avatar = url_avatar();   // null si todavía no tiene
             </canvas>
 
             <div class="controles-avatar">
+                <fieldset class="herramienta">
+                    <legend>Herramienta</legend>
+                    <p>
+                        <input type="radio" id="herramienta-lapiz" name="herramienta" value="lapiz" checked>
+                        <label for="herramienta-lapiz">Lápiz</label>
+                    </p>
+                    <p>
+                        <input type="radio" id="herramienta-goma" name="herramienta" value="goma">
+                        <label for="herramienta-goma">Goma</label>
+                    </p>
+                </fieldset>
                 <p>
                     <label for="color-pincel">Color</label>
                     <input type="color" id="color-pincel" value="#7a1f2b">
@@ -82,6 +94,8 @@ $avatar = url_avatar();   // null si todavía no tiene
                      alt="Tu avatar guardado"<?php if ($avatar === null) print(" hidden"); ?>>
                 <figcaption id="sin-avatar"><?php
                     print($avatar === null ? "Todavía no has guardado ningún avatar" : "Avatar guardado"); ?></figcaption>
+                <!-- Carga el avatar guardado en el lienzo para seguir editándolo -->
+                <button type="button" id="editar-avatar"<?php if ($avatar === null) print(" disabled"); ?>>Editar mi avatar</button>
             </figure>
         </div>
     </section>
