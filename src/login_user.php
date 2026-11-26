@@ -25,7 +25,7 @@ $pwd   = $_POST["pwd"] ?? "";
 
 $cliente = false;
 try {
-    $consulta = $pdo->prepare("SELECT id, login, password, rol FROM portal_clientes WHERE login = ?");
+    $consulta = $pdo->prepare("SELECT id, login, password, rol, avatar FROM portal_clientes WHERE login = ?");
     $consulta->execute([$login]);
     $cliente = $consulta->fetch(PDO::FETCH_ASSOC);   // false si no existe
 } catch (PDOException $e) {
@@ -39,6 +39,7 @@ if ($cliente !== false && password_verify($pwd, $cliente["password"])) {
     $_SESSION["user"] = $cliente["login"];
     $_SESSION["rol"]  = $cliente["rol"];
     $_SESSION["id"]   = $cliente["id"];
+    $_SESSION["avatar"] = $cliente["avatar"];   // ruta del PNG o null (para el menú)
     $exito_msg = "Bienvenido, " . $cliente["login"];
     $central = "/partials/home.php";
 } else {

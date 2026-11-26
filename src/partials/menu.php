@@ -9,6 +9,8 @@
  * no basta, el servidor también lo comprueba.
  *
  * La opción de la página actual lleva aria-current="page" (accesibilidad).
+ * Con sesión se muestra el avatar del usuario (si tiene) junto a su nombre; es
+ * decorativo (alt vacío) porque al lado ya pone quién es.
  *
  * @author Juan (persona A)
  */
@@ -27,6 +29,7 @@ $opciones_menu = [
     ["action" => "listado_clientes", "texto" => "Clientes", "nivel" => "gestor"],
 
     // Con sesión, al final
+    ["action" => "perfil",     "texto" => "Mi perfil",       "nivel" => "logueado"],
     ["action" => "exit",       "texto" => "Salir",           "nivel" => "logueado"],
 ];
 ?>
@@ -40,7 +43,10 @@ $opciones_menu = [
 <?php endif; ?>
 <?php endforeach; ?>
 <?php if (esta_logueado()): ?>
-        <li class="bienvenida">Bienvenido <strong><?php print(htmlspecialchars($_SESSION["user"])); ?></strong>
+<?php $avatar_menu = url_avatar(); ?>
+        <li class="bienvenida"><?php if ($avatar_menu !== null): ?><img src="<?php
+            print(htmlspecialchars($avatar_menu)); ?>" width="32" height="32" alt=""> <?php
+            endif; ?>Bienvenido <strong><?php print(htmlspecialchars($_SESSION["user"])); ?></strong>
             (<?php print($_SESSION["rol"] == "gestor" ? "gestor" : "cliente"); ?>)</li>
 <?php endif; ?>
     </ul>

@@ -6,7 +6,8 @@
  *   aplicaciones del mismo servidor.
  * - La sesión caduca tras 20 minutos sin actividad.
  * - Datos que guarda el login: $_SESSION["user"], $_SESSION["rol"] ("client"
- *   o "gestor") y $_SESSION["id"] (id en portal_clientes).
+ *   o "gestor"), $_SESSION["id"] (id en portal_clientes) y $_SESSION["avatar"]
+ *   (ruta del PNG o null).
  *
  * Se incluye ANTES de imprimir nada: session_start() envía una cookie en la
  * cabecera HTTP. Lo incluyen portal.php y todos los ficheros de api/.
@@ -41,6 +42,23 @@ function esta_logueado()
 function es_gestor()
 {
     return esta_logueado() && $_SESSION["rol"] == "gestor";
+}
+
+/**
+ * URL del avatar del usuario con sesión, o null si no tiene (lo usan el menú y el perfil).
+ * Se le añade ?v=<fecha del fichero> para que, al cambiar el dibujo, el navegador
+ * no siga mostrando el de la caché.
+ */
+function url_avatar()
+{
+    if (!esta_logueado() || empty($_SESSION["avatar"])) {
+        return null;
+    }
+    $fichero = dirname(__FILE__) . "/../" . $_SESSION["avatar"];
+    if (!is_file($fichero)) {
+        return null;   // la ruta está en la BD pero el PNG se ha borrado
+    }
+    return $_SESSION["avatar"] . "?v=" . filemtime($fichero);
 }
 
 /**
