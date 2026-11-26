@@ -1,7 +1,7 @@
 /*
  * Estilos de la parte A (usuarios): formularios de registro, login y perfil.
- * Usa las variables de css/estilo.css (persona C); el segundo valor de var()
- * es el que se usa mientras esa variable no exista.
+ * Lo común (campos, botones, tablas) ya lo pone css/estilo.css (persona C);
+ * aquí solo lo propio de estas páginas, con las variables de estilo.css.
  *
  * Autor: Juan (persona A)
  */
@@ -20,28 +20,21 @@
     font-weight: bold;
 }
 
-.form-usuario input[type="text"],
-.form-usuario input[type="email"],
-.form-usuario input[type="password"] {
-    padding: 0.4em;
-    font-size: 1em;
-    border: 1px solid var(--color-borde, #888);
-    border-radius: 4px;
-}
+/* Los campos (borde, relleno, fuente) los pone estilo.css con --color-borde-campo */
 
 .form-usuario small {
-    color: var(--color-texto-suave, #555);
+    color: var(--color-texto-suave);
 }
 
 /* Mensaje de error junto al campo (lo escribe js/registro.js) */
 .form-usuario .error-campo {
-    color: var(--color-error, #b00020);
+    color: var(--color-error);
     min-height: 1.2em;
 }
 
 /* Campo marcado como incorrecto */
 .form-usuario input[aria-invalid="true"] {
-    border: 2px solid var(--color-error, #b00020);
+    border: 2px solid var(--color-error);
 }
 
 .form-usuario .botones {
@@ -49,33 +42,9 @@
     gap: 1em;
 }
 
-/* Listado de clientes (solo gestor) */
+/* Listado de clientes (solo gestor). Colores, bordes y filas alternas: estilo.css */
 .listado-clientes table {
-    width: 100%;
     max-width: 50em;
-    border-collapse: collapse;
-}
-
-.listado-clientes caption {
-    text-align: left;
-    font-style: italic;
-    margin-bottom: 0.5em;
-}
-
-.listado-clientes th,
-.listado-clientes td {
-    padding: 0.4em 0.6em;
-    border: 1px solid var(--color-borde, #888);
-    text-align: left;
-}
-
-.listado-clientes thead th {
-    background: var(--color-principal, #6a1b4d);
-    color: #ffffff;
-}
-
-.listado-clientes tbody tr:nth-child(even) {
-    background: var(--color-fondo-alterno, #f2f2f2);
 }
 
 /* En móvil la tabla se desplaza en horizontal en lugar de salirse */

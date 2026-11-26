@@ -1,18 +1,22 @@
 <?php
 /**
- * Página principal del portal (página estática, Tema 1).
+ * Página principal del portal (Tema 1, con un bloque dinámico del Tema 2).
  *
  * - Presentación del portal, próximos actos destacados y cómo comprar entradas.
- * - HTML semántico: <section> por bloque, <article> por acto, <figure> con
- *   <figcaption>, <time datetime> para las fechas y <dl> para los datos del acto.
+ * - HTML semántico: <section> por bloque, <article> por acto, <time datetime>
+ *   para las fechas y <dl> para los datos del acto.
  * - Accesible: un único <h1> (en header.php) y después <h2>/<h3> en orden;
  *   cada imagen con su texto alternativo; cada sección con aria-labelledby.
- * - Los actos destacados son fijos (página estática). El listado real de actos
- *   con búsqueda por fecha y lugar es de la persona B.
+ * - Los destacados son los 3 próximos actos de portal_actos: los consulta
+ *   portal.php con PDO y llegan en $destacados. El listado completo de actos,
+ *   con búsqueda por fecha y lugar, es de la persona B.
  * - Estilos en css/home.css (los añade portal.php cuando se muestra esta página).
  *
  * @author Juan (persona A)
  */
+
+$meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
+          "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 ?>
 <section class="presentacion" aria-labelledby="titulo-presentacion">
     <h2 id="titulo-presentacion">Bienvenido al portal de actos culturales</h2>
@@ -32,58 +36,35 @@
 
 <section class="destacados" aria-labelledby="titulo-destacados">
     <h2 id="titulo-destacados">Próximos actos destacados</h2>
+<?php if (count($destacados) == 0): ?>
+    <p>Pronto anunciaremos nuevos actos.</p>
+<?php else: ?>
     <div class="lista-actos">
+<?php foreach ($destacados as $acto):
+    $momento = strtotime($acto["fecha"]);
+    // Sin imagen propia se usa una genérica
+    $imagen = $acto["imagen"] ? $acto["imagen"] : "media/home/generico.svg";
+?>
         <article class="acto">
-            <figure>
-                <img src="media/home/concierto.svg" width="320" height="180"
-                     alt="Ilustración de un escenario con un piano de cola y un atril bajo un foco">
-                <figcaption>Música clásica</figcaption>
-            </figure>
-            <h3>Concierto de Navidad</h3>
+            <img src="<?php print(htmlspecialchars($imagen)); ?>" width="320" height="180"
+                 alt="<?php print(htmlspecialchars("Imagen del acto " . $acto["titulo"])); ?>">
+            <h3><?php print(htmlspecialchars($acto["titulo"])); ?></h3>
             <dl>
                 <dt>Fecha</dt>
-                <dd><time datetime="2026-12-19T19:00">19 de diciembre de 2026, 19:00 h</time></dd>
+                <dd><time datetime="<?php print(date("Y-m-d\TH:i", $momento)); ?>"><?php
+                    print(date("j", $momento) . " de " . $meses[date("n", $momento) - 1]
+                          . " de " . date("Y, H:i", $momento) . " h"); ?></time></dd>
                 <dt>Lugar</dt>
-                <dd>Auditori i Palau de Congressos de Castelló</dd>
+                <dd><?php print(htmlspecialchars($acto["lugar"])); ?></dd>
                 <dt>Precio</dt>
-                <dd>15,00 €</dd>
+                <dd><?php print($acto["precio"] > 0
+                        ? number_format($acto["precio"], 2, ",", ".") . " €"
+                        : "Entrada libre"); ?></dd>
             </dl>
         </article>
-
-        <article class="acto">
-            <figure>
-                <img src="media/home/teatro.svg" width="320" height="180"
-                     alt="Ilustración de un telón rojo abierto con las máscaras del teatro">
-                <figcaption>Teatro</figcaption>
-            </figure>
-            <h3>La casa de Bernarda Alba</h3>
-            <dl>
-                <dt>Fecha</dt>
-                <dd><time datetime="2027-01-16T20:30">16 de enero de 2027, 20:30 h</time></dd>
-                <dt>Lugar</dt>
-                <dd>Teatre Principal de Castelló</dd>
-                <dt>Precio</dt>
-                <dd>12,00 €</dd>
-            </dl>
-        </article>
-
-        <article class="acto">
-            <figure>
-                <img src="media/home/exposicion.svg" width="320" height="180"
-                     alt="Ilustración de una sala de exposiciones con tres cuadros colgados en la pared">
-                <figcaption>Exposición</figcaption>
-            </figure>
-            <h3>Fotografía de la Mediterrània</h3>
-            <dl>
-                <dt>Fecha</dt>
-                <dd><time datetime="2027-02-05T11:00">Desde el 5 de febrero de 2027</time></dd>
-                <dt>Lugar</dt>
-                <dd>Paranimf de la Universitat Jaume I</dd>
-                <dt>Precio</dt>
-                <dd>Entrada libre</dd>
-            </dl>
-        </article>
+<?php endforeach; ?>
     </div>
+<?php endif; ?>
 </section>
 
 <section class="pasos" aria-labelledby="titulo-pasos">

@@ -120,9 +120,23 @@ switch ($action) {
 }
 
 // La página principal sale desde varias acciones (home, exit, errores...):
-// su hoja de estilos se añade aquí una sola vez
+// su hoja de estilos y sus datos se preparan aquí una sola vez
 if ($central == "/partials/home.php") {
     array_push($css, "css/home.css");
+
+    // Los 3 próximos actos para "Próximos actos destacados" (Tema 2: PDO).
+    // No lleva datos del usuario, pero seguimos la regla de usar siempre prepare.
+    $destacados = [];
+    try {
+        $consulta = $pdo->prepare("SELECT titulo, fecha, lugar, precio, imagen
+                                   FROM portal_actos WHERE fecha >= NOW()
+                                   ORDER BY fecha LIMIT 3");
+        $consulta->execute();
+        $destacados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        // Sin la tabla (falta ejecutar instalar.php) la portada sale igual, sin destacados:
+        // no se muestra un error a los visitantes en la página de inicio
+    }
 }
 
 // Carga modular de la página

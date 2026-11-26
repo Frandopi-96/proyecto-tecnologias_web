@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" width="320" height="180">
+  <!-- Imagen genérica para los actos sin imagen propia: entrada de espectáculo -->
+  <rect width="320" height="180" fill="#7a1f2b"/>
+  <rect x="0" y="0" width="320" height="10" fill="#b8862b"/>
+  <rect x="0" y="170" width="320" height="10" fill="#b8862b"/>
+  <!-- entrada -->
+  <path d="M80 50 h160 a12 12 0 0 0 0 24 v32 a12 12 0 0 0 0 24 h-160 a12 12 0 0 0 0 -24 v-32 a12 12 0 0 0 0 -24 z"
+        fill="#f8f3ea"/>
+  <line x1="200" y1="56" x2="200" y2="124" stroke="#7a1f2b" stroke-width="2" stroke-dasharray="5 4"/>
+  <!-- estrella -->
+  <polygon points="140,66 147,82 164,83 151,94 155,111 140,102 125,111 129,94 116,83 133,82" fill="#b8862b"/>
+  <circle cx="221" cy="90" r="8" fill="#7a1f2b"/>
+</svg>
