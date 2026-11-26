@@ -90,6 +90,29 @@
     cursor: crosshair;
 }
 
+/* Con la goma, cursor de celda para distinguirla del lápiz */
+#lienzo-avatar.con-goma {
+    cursor: cell;
+}
+
+.controles-avatar .herramienta {
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio);
+    margin: 0 0 0.8em 0;
+    display: flex;
+    gap: 1em;
+}
+
+.controles-avatar .herramienta p {
+    flex-direction: row;
+    gap: 0.3em;
+    margin: 0;
+}
+
+.avatar-actual button {
+    margin-top: 0.6em;
+}
+
 .controles-avatar p {
     margin: 0 0 0.8em 0;
     display: flex;
