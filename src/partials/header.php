@@ -7,8 +7,15 @@
  * Los scripts van en el <head> con defer: se ejecutan cuando el DOM ya está
  * cargado (Tema 3). Nada de JavaScript dentro de atributos HTML (onclick...).
  *
+ * Personalización (Tema 2, cookies): si la cookie "tema" vale "oscuro", se
+ * carga css/tema-oscuro.css justo después de estilo.css. La cookie la puede
+ * cambiar cualquiera en su navegador, así que solo se acepta ese valor exacto;
+ * cualquier otro deja el tema claro.
+ *
  * @author Juan (persona A)
  */
+
+$tema_oscuro = isset($_COOKIE["tema"]) && $_COOKIE["tema"] === "oscuro";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -19,6 +26,9 @@
     <meta name="author" content="Grupo portal cultural EI1042">
     <title>Portal de actos culturales</title>
     <link rel="stylesheet" href="css/estilo.css">
+<?php if ($tema_oscuro): ?>
+    <link rel="stylesheet" href="css/tema-oscuro.css">
+<?php endif; ?>
 <?php foreach ($css as $hoja): ?>
     <link rel="stylesheet" href="<?php print(htmlspecialchars($hoja)); ?>">
 <?php endforeach; ?>

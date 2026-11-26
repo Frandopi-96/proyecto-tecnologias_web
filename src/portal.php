@@ -53,6 +53,8 @@ $permisos = [
     "login_user" => "anonimo",
     "exit"       => "logueado",
     "listado_clientes" => "gestor",
+    "perfil"       => "logueado",
+    "guardar_tema" => "logueado",
     // Cada parte añade aquí sus acciones, p. ej.:
     // "form_compra" => "logueado",
     // "form_acto"   => "gestor",
@@ -108,6 +110,24 @@ switch ($action) {
     case "listado_clientes":   // solo gestor; la tabla la rellena js/clientes.js con fetch
         $central = "/partials/listado_clientes.php";
         array_push($js, "js/clientes.js");
+        array_push($css, "css/usuarios.css");
+        break;
+    case "guardar_tema":       // POST del formulario de tema de "Mi perfil"
+        // Personalización con cookie (Tema 2). Solo se aceptan los dos valores posibles.
+        $tema = $_POST["tema"] ?? "";
+        if ($_SERVER["REQUEST_METHOD"] !== "POST" || ($tema !== "claro" && $tema !== "oscuro")) {
+            array_push($error_msg, "Elige el tema claro o el oscuro");
+        } else {
+            setcookie("tema", $tema, time() + 30 * 24 * 60 * 60);   // dura 30 días
+            // setcookie solo llega al navegador con esta respuesta: para que esta
+            // misma página ya salga con el tema nuevo, se cambia también $_COOKIE
+            $_COOKIE["tema"] = $tema;
+            $exito_msg = "Tema " . $tema . " guardado";
+        }
+        // sigue en "perfil" para volver a mostrar la página
+    case "perfil":             // Mi perfil: tema (cookie) y avatar en Canvas
+        $central = "/partials/form_perfil.php";
+        array_push($js, "js/perfil.js");
         array_push($css, "css/usuarios.css");
         break;
     case "politica_legal":     // página estática para todos (persona C)

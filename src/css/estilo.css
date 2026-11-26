@@ -168,6 +168,15 @@ body > nav .bienvenida {
     font-size: 0.9rem;
 }
 
+/* Avatar del usuario junto al saludo (partials/menu.php, persona A) */
+body > nav .bienvenida img {
+    vertical-align: middle;
+    margin-right: 0.4rem;
+    border-radius: 50%;
+    border: 2px solid var(--color-acento-claro);
+    background: #ffffff;
+}
+
 /* ---------- Avisos (partials/error.php y $exito_msg de portal.php) ---------- */
 .error,
 .exito {
