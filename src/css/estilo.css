@@ -41,6 +41,12 @@
 }
 
 /* ---------- Base ---------- */
+/* Tamaño del texto elegido por el usuario en "Mi perfil" (js/personalizar.js, persona A).
+ * Todo el portal usa rem, así que al cambiar el de <html> cambia todo a la vez. */
+html {
+    font-size: var(--tamano-texto, 100%);
+}
+
 * {
     box-sizing: border-box;
 }
