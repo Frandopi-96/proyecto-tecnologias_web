@@ -57,7 +57,10 @@ function api_exigir_acceso($nivel) { /* si no tiene acceso: 403 + {"error": ...}
 - **Registro** (`reg_user`): contraseña guardada con `password_hash($pwd, PASSWORD_DEFAULT)` (cifrada) y rol `client`.
   Reglas de B3: login mínimo 7 caracteres y no repetido; contraseña mínimo 7 caracteres con al menos 1 número.
 - **Logout** (`exit`): `session_unset()`, `session_destroy()` y borrar la cookie de sesión con `setcookie()`.
-- **Personalización** (A): preferencia del cliente en una **cookie** (`setcookie`, Tema 2), p. ej. tema claro/oscuro.
+- **Personalización** (A), como **B4 Pas 10 y Pas 11**: `header.php` escribe el usuario en `<body data-user="...">`
+  y `js/personalizar.js` lo lee con `dataset`. Tema claro/oscuro y tamaño del texto se guardan en **`localStorage`**
+  con el usuario como prefijo (`<usuario>Tema`, `<usuario>TamanoTexto`), así cada usuario tiene su entorno.
+  No pasa por el servidor. Los anónimos ven el portal por defecto.
 
 ## 3. Tablas (las crea `src/instalar.php`, persona B)
 Todas en la BD `wp_alxxxx`, motor InnoDB, `utf8mb4`.

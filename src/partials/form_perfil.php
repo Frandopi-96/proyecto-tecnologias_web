@@ -2,15 +2,15 @@
 /**
  * Mi perfil (usuarios con sesión): personalización y avatar.
  *
- * 1. Tema claro u oscuro: formulario POST a portal.php?action=guardar_tema,
- *    que lo guarda en la cookie "tema" con setcookie (Tema 2).
+ * 1. Apariencia (tema claro u oscuro y tamaño del texto), como B4 Pas 11: el
+ *    formulario NO se envía al servidor; js/personalizar.js lo guarda en
+ *    localStorage para este usuario y lo aplica en todas las páginas.
  * 2. Avatar: se dibuja en un <canvas> con el ratón (B4) y js/perfil.js lo envía
  *    a api/guardar_avatar.php con fetch + FormData (Tema 4).
  *
  * @author Juan (persona A)
  */
 
-$tema_actual = (isset($_COOKIE["tema"]) && $_COOKIE["tema"] === "oscuro") ? "oscuro" : "claro";
 $avatar = url_avatar();   // null si todavía no tiene
 ?>
 <section class="perfil" aria-labelledby="titulo-perfil">
@@ -18,22 +18,35 @@ $avatar = url_avatar();   // null si todavía no tiene
 
     <section class="perfil-tema" aria-labelledby="titulo-tema">
         <h3 id="titulo-tema">Apariencia del portal</h3>
-        <form action="portal.php?action=guardar_tema" method="POST">
+        <!-- Sin action ni method: lo gestiona js/personalizar.js (localStorage) -->
+        <form id="form-personalizar">
             <fieldset>
                 <legend>Tema de colores</legend>
                 <p>
-                    <input type="radio" id="tema-claro" name="tema" value="claro"
-                        <?php if ($tema_actual == "claro") print("checked"); ?>>
+                    <input type="radio" id="tema-claro" name="tema" value="claro" checked>
                     <label for="tema-claro">Claro</label>
                 </p>
                 <p>
-                    <input type="radio" id="tema-oscuro" name="tema" value="oscuro"
-                        <?php if ($tema_actual == "oscuro") print("checked"); ?>>
+                    <input type="radio" id="tema-oscuro" name="tema" value="oscuro">
                     <label for="tema-oscuro">Oscuro</label>
                 </p>
             </fieldset>
-            <p><small>Se guarda en este navegador durante 30 días.</small></p>
-            <p><input type="submit" value="Guardar tema"></p>
+            <p>
+                <label for="tamano-texto">Tamaño del texto</label>
+                <select id="tamano-texto" name="tamano">
+                    <option value="90%">Pequeño</option>
+                    <option value="100%" selected>Normal</option>
+                    <option value="115%">Grande</option>
+                    <option value="130%">Muy grande</option>
+                </select>
+            </p>
+            <p><small>Al cambiar las opciones ves cómo queda. Se guarda en este navegador
+                solo para tu usuario.</small></p>
+            <p class="botones">
+                <input type="submit" value="Guardar">
+                <button type="button" id="restablecer-personalizar">Restablecer</button>
+            </p>
+            <p id="mensaje-personalizar" role="status" aria-live="polite"></p>
         </form>
     </section>
 

@@ -7,15 +7,17 @@
  * Los scripts van en el <head> con defer: se ejecutan cuando el DOM ya está
  * cargado (Tema 3). Nada de JavaScript dentro de atributos HTML (onclick...).
  *
- * Personalización (Tema 2, cookies): si la cookie "tema" vale "oscuro", se
- * carga css/tema-oscuro.css justo después de estilo.css. La cookie la puede
- * cambiar cualquiera en su navegador, así que solo se acepta ese valor exacto;
- * cualquier otro deja el tema claro.
+ * Personalización de cada usuario (como B4, Pas 10 y Pas 11): el usuario de la
+ * sesión se escribe en <body data-user="..."> (vacío si es anónimo) y
+ * js/personalizar.js lo lee con dataset para aplicar lo que tenga guardado en
+ * localStorage. Por eso css/tema-oscuro.css y js/personalizar.js se cargan
+ * siempre (el tema oscuro solo se activa con la clase que pone el JS).
+ * htmlspecialchars evita que un nombre con comillas rompa el atributo (XSS).
  *
  * @author Juan (persona A)
  */
 
-$tema_oscuro = isset($_COOKIE["tema"]) && $_COOKIE["tema"] === "oscuro";
+$usuario_body = $_SESSION["user"] ?? "";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,18 +28,17 @@ $tema_oscuro = isset($_COOKIE["tema"]) && $_COOKIE["tema"] === "oscuro";
     <meta name="author" content="Grupo portal cultural EI1042">
     <title>Portal de actos culturales</title>
     <link rel="stylesheet" href="css/estilo.css">
-<?php if ($tema_oscuro): ?>
     <link rel="stylesheet" href="css/tema-oscuro.css">
-<?php endif; ?>
 <?php foreach ($css as $hoja): ?>
     <link rel="stylesheet" href="<?php print(htmlspecialchars($hoja)); ?>">
 <?php endforeach; ?>
 <?php foreach ($js as $script): ?>
     <script src="<?php print(htmlspecialchars($script)); ?>" defer></script>
 <?php endforeach; ?>
+    <script src="js/personalizar.js" defer></script>
 </head>
 
-<body>
+<body data-user="<?php print(htmlspecialchars($usuario_body)); ?>">
     <header>
         <a href="portal.php">
             <h1>Portal de actos culturales</h1>

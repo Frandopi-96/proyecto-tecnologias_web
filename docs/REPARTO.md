@@ -22,9 +22,9 @@ Tareas concretas: **tablero** de GitHub ("Portal cultural"), agrupadas por perso
 ### A — Usuarios y sesiones
 | | |
 |---|---|
-| **PHP** | `includedb/conexion.php` (PDO), `includedb/sesion.php` (sesión, caducidad, `es_gestor()`), `portal.php` (controlador); registro con `password_hash`, login con `password_verify` y `$_SESSION`, logout; personalización con `setcookie`; guardar el avatar (PNG); `api/clientes.php` |
+| **PHP** | `includedb/conexion.php` (PDO), `includedb/sesion.php` (sesión, caducidad, `es_gestor()`), `portal.php` (controlador); registro con `password_hash`, login con `password_verify` y `$_SESSION`, logout; personalización por usuario (`data-user` en el `<body>`); guardar el avatar (PNG); `api/clientes.php` |
 | **HTML/CSS** | header, menu (según el rol), footer, página principal, formularios de registro, login y perfil |
-| **JS** | Validación del registro (eventos del DOM), avatar dibujado en Canvas (como `canvasCara`, B4), `fetch` del listado de clientes |
+| **JS** | Validación del registro (eventos del DOM), personalización con `localStorage` (B4 Pas 11), avatar dibujado en Canvas (como `canvasCara`, B4), `fetch` del listado de clientes |
 
 ### B — Actos (gestor)
 | | |

@@ -66,6 +66,16 @@
     margin: 0.3em 0;
 }
 
+.perfil-tema select {
+    display: block;
+    margin-top: 0.3em;
+}
+
+.perfil-tema .botones {
+    display: flex;
+    gap: 0.8em;
+}
+
 .zona-avatar {
     display: flex;
     flex-wrap: wrap;

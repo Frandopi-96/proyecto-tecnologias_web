@@ -1,9 +1,11 @@
 /*
- * Tema oscuro del portal (personalización del cliente, issue #5).
+ * Tema oscuro del portal (personalización de cada usuario, issues #5 y #49).
  *
- * partials/header.php carga esta hoja DESPUÉS de css/estilo.css solo si la
- * cookie "tema" vale "oscuro" (la guarda portal.php?action=guardar_tema con
- * setcookie, Tema 2). Al ir después, sus variables sustituyen a las de estilo.css.
+ * partials/header.php carga siempre esta hoja después de css/estilo.css, pero sus
+ * reglas solo se aplican cuando js/personalizar.js pone la clase "tema-oscuro" en
+ * <html> (preferencia del usuario guardada en localStorage, como B4 Pas 11).
+ * html.tema-oscuro es más específico que :root, así que estas variables
+ * sustituyen a las de estilo.css.
  *
  * --color-fondo no se cambia: en estilo.css también es el color del texto claro
  * sobre el granate (cabecera, menú, botones, cabecera de tablas). El fondo
@@ -14,8 +16,8 @@
  * Autor: Juan (persona A)
  */
 
-:root {
-    color-scheme: dark;                 /* controles del navegador (radio, color...) en oscuro */
+html.tema-oscuro {
+    color-scheme: dark;                 /* controles del navegador (radio, select...) en oscuro */
 
     --color-superficie: #2a2120;        /* tarjetas, formularios, tablas */
     --color-texto: #f1e8da;
@@ -30,25 +32,25 @@
     --color-exito-fondo: #15301c;
 }
 
-body {
+html.tema-oscuro body {
     background: #1c1615;
 }
 
 /* Granate claro para títulos y enlaces: el granate de estilo.css no se lee sobre oscuro */
-h2,
-main a,
-.noticias a {
+html.tema-oscuro h2,
+html.tema-oscuro main a,
+html.tema-oscuro .noticias a {
     color: #f0a3ad;
 }
 
 /* En estilo.css el pie usa --color-texto de fondo (que aquí es claro) */
-footer {
+html.tema-oscuro footer {
     background: #0f0b0a;
 }
 
 /* En estilo.css el saludo del menú y el texto del pie usan --color-borde, que aquí
  * es oscuro: se deja el beige claro original para que se lea sobre fondo oscuro */
-body > nav .bienvenida,
-footer {
+html.tema-oscuro body > nav .bienvenida,
+html.tema-oscuro footer {
     color: #d9cbb8;
 }
