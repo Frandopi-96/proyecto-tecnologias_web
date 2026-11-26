@@ -35,23 +35,10 @@
     overflow: hidden;
 }
 
-.acto figure {
-    margin: 0;
-}
-
 .acto img {
     display: block;
     width: 100%;
     height: auto;
-}
-
-.acto figcaption {
-    padding: 0.25rem 1rem;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background: var(--color-primario);
-    color: var(--color-fondo);
 }
 
 .acto h3 {
